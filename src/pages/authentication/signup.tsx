@@ -13,7 +13,7 @@ import {
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
-import { register } from "../../../apis/user.api";
+import { register } from "../../apis/user.api";
 import localStorageUtils from "../../util/localStorageUtils";
 
 interface SignUpFormValues {

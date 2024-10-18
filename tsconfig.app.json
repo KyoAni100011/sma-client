@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/vite-env.d.ts", "apis/InternetService.ts"]
+  "include": ["src", "vite-env.d.ts", "src/apis/InternetService.ts"]
 }

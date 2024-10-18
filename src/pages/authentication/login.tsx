@@ -14,7 +14,7 @@ import {
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Link as RouterLink } from "react-router-dom";
-import { login } from "../../../apis/user.api";
+import { login } from "../../apis/user.api";
 import localStorageUtils from "../../util/localStorageUtils";
 
 interface LoginFormValues {
@@ -52,6 +52,7 @@ const LoginForm: React.FC = () => {
       localStorageUtils.setItem("user", res.data)
       setTimeout(() => {window.location.href="/"}, 2500)
     } catch (error: any) {
+      console.log(error)
       toast({
         title: "Error",
         description: error.response?.data?.message,
