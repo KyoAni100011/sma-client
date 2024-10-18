@@ -11,6 +11,7 @@ import {
   MenuItem,
   MenuList,
   Avatar,
+  HStack,
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
@@ -81,16 +82,31 @@ const MenuItems = () => {
 };
 
 const MenuSettings = () => {
-  const user = useAuth(); 
+  const user = useAuth();
   return (
     <Menu>
-      <MenuButton as={Avatar}/>
+
+    
+
+
+<MenuButton as={HStack} border="1px solid" borderRadius="full">
+  <Flex alignItems="center" p={1}>
+  <Text mx={2} fontWeight={700}>{user.user?.name}</Text>
+  <Avatar boxSize="30px" />
+  </Flex>
+</MenuButton>
+
+
+
       <MenuList>
-     <MenuItem color="red.700" fontWeight={700} onClick={user.logout}>Log out</MenuItem>
+        <MenuItem color="red.700" fontWeight={700} onClick={user.logout}>
+          Log out
+        </MenuItem>
       </MenuList>
     </Menu>
   );
 };
+
 
 const ThemeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
