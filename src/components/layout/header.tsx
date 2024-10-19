@@ -26,6 +26,7 @@ export default function Navbar() {
       bg={colorMode === "light" ? "white" : "transparent"}
       color={colorMode === "light" ? "black" : "white"}
       px={6}
+      mb={4}
       boxShadow="md"
     >
       <Flex h={16} alignItems="center" justifyContent="space-between">
