@@ -1,4 +1,4 @@
-import Navbar from "../../components/layout/header";
+import Home from "../../components/layout/home";
 import LoginForm from "../../pages/authentication/login";
 import SignUpForm from "../../pages/authentication/signup";
 import { routerType } from "../types/router.types";
@@ -7,7 +7,7 @@ const pageData: routerType[] = [
   {
     title: "Home",
     path: "",
-    element: <Navbar />,
+    element: <Home />,
   },
   {
     title: "Login",

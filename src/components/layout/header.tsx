@@ -85,18 +85,14 @@ const MenuSettings = () => {
   const user = useAuth();
   return (
     <Menu>
-
-    
-
-
-<MenuButton as={HStack} border="1px solid" borderRadius="full">
-  <Flex alignItems="center" p={1}>
-  <Text mx={2} fontWeight={700}>{user.user?.name}</Text>
-  <Avatar boxSize="30px" />
-  </Flex>
-</MenuButton>
-
-
+      <MenuButton as={HStack} border="1px solid" borderRadius="full">
+        <Flex alignItems="center" p={1}>
+          <Text mx={2} fontWeight={700}>
+            {user.user?.name}
+          </Text>
+          <Avatar boxSize="30px" />
+        </Flex>
+      </MenuButton>
 
       <MenuList>
         <MenuItem color="red.700" fontWeight={700} onClick={user.logout}>
@@ -106,7 +102,6 @@ const MenuSettings = () => {
     </Menu>
   );
 };
-
 
 const ThemeToggle = () => {
   const { colorMode, toggleColorMode } = useColorMode();
