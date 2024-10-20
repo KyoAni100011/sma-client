@@ -38,7 +38,7 @@ export default function PostList() {
   };
 
   return (
-    <Flex maxW="xl" mx="auto" flexDirection="column" rowGap={4} px={2}>
+    <Flex flexDirection="column" rowGap={4}>
       <PostCard post={mockPost} />
       <PostCard post={mockPost} />
       <PostCard post={mockPost} />
