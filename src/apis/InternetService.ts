@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL_LOCAL;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL_REMOTE;
 const API_BASE_PATH = "/api/v1";
 
 const CRUD_ACTIONS = {
