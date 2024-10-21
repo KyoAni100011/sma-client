@@ -134,9 +134,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   const deleteAPost = async () => {
     setLoading(true);
-    await deleteImage(imgPublicId || "")
-      .then(() => dispatch(removePost(id)))
-      .catch((err) => console.log(err));
+    if (imgPublicId) {
+      await deleteImage(imgPublicId || "")
+        .then(() => dispatch(removePost(id)))
+        .catch((err) => console.log(err));
+    } else {
+      dispatch(removePost(id));
+    }
     setLoading(false);
   };
 
