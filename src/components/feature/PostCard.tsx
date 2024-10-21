@@ -118,6 +118,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     content,
     imgUrl,
     imgPublicId,
+    videoUrl,
+    videoPublicId,
     likeCount,
     commentCount,
     shareCount,
@@ -136,6 +138,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     setLoading(true);
     if (imgPublicId) {
       await deleteImage(imgPublicId || "")
+        .then(() => dispatch(removePost(id)))
+        .catch((err) => console.log(err));
+    } else if (videoPublicId) {
+      await deleteImage(videoPublicId || "")
         .then(() => dispatch(removePost(id)))
         .catch((err) => console.log(err));
     } else {
@@ -189,9 +195,19 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <Text mb={4} fontSize="lg" lineHeight="1.5">
         {content}
       </Text>
+
       {imgUrl && (
         <Flex justifyContent="center" mb={4}>
           <Image borderRadius="md" src={imgUrl} alt="Post Image" />
+        </Flex>
+      )}
+
+      {videoUrl && (
+        <Flex justifyContent="center" mb={4}>
+          <Box as="video" controls width="100%" borderRadius="md">
+            <source src={videoUrl} type="video/mp4" />
+            Your browser does not support the video tag.
+          </Box>
         </Flex>
       )}
 
