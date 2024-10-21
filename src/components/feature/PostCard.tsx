@@ -25,7 +25,7 @@ import { useDispatch } from "react-redux";
 import { removePost } from "../../redux/postsThunk";
 import { useState } from "react";
 import LoadingOverlay from "./LoadingOverlay";
-import { deleteImage } from "../../apis/upload.api";
+import { deleteImage, deleteVideo } from "../../apis/upload.api";
 
 interface User {
   id: number;
@@ -141,7 +141,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         .then(() => dispatch(removePost(id)))
         .catch((err) => console.log(err));
     } else if (videoPublicId) {
-      await deleteImage(videoPublicId || "")
+      await deleteVideo(videoPublicId || "")
         .then(() => dispatch(removePost(id)))
         .catch((err) => console.log(err));
     } else {
