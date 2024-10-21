@@ -22,7 +22,7 @@ interface SignUpFormValues {
   password: string;
 }
 
-export default function SignUpForm() {
+const SignUpForm: React.FC = () => {
   const toast = useToast();
 
   const initialValues: SignUpFormValues = {
@@ -39,24 +39,26 @@ export default function SignUpForm() {
 
   const handleSubmit = async (
     values: SignUpFormValues,
-    { setSubmitting }: any
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     try {
       const res = await register(values);
+      localStorageUtils.setItem("user", res.data);
       toast({
         title: res.message,
-        description: "Welcome back!",
+        description: "Welcome to the platform!",
         status: "success",
         duration: 2000,
         isClosable: true,
         position: "top",
       });
-      localStorageUtils.setItem("user", res.data)
-      setTimeout(() => {window.location.href="/"}, 2500)
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2500);
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.response?.data?.message,
+        description: error.response?.data?.message || "Something went wrong.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -66,18 +68,19 @@ export default function SignUpForm() {
       setSubmitting(false);
     }
   };
+
   return (
     <Box
       maxWidth="500px"
       mx="auto"
-      height={"100vh"}
+      height="100vh"
       bg="white"
       color="black"
       px={4}
     >
       <Flex flexDirection="column" justifyContent="center" height="100%">
         <Heading as="h2" size="lg" mb={4} textAlign="center">
-          Login
+          Sign Up
         </Heading>
         <Formik
           initialValues={initialValues}
@@ -97,10 +100,9 @@ export default function SignUpForm() {
                   type="email"
                   focusBorderColor="black"
                 />
-                <ErrorMessage
-                  name="email"
-                  render={(msg) => <Text color="red.500">{msg}</Text>}
-                />
+                <ErrorMessage name="email">
+                  {(msg) => <Text color="red.500">{msg}</Text>}
+                </ErrorMessage>
               </FormControl>
 
               <FormControl mb={4}>
@@ -112,10 +114,9 @@ export default function SignUpForm() {
                   type="text"
                   focusBorderColor="black"
                 />
-                <ErrorMessage
-                  name="name"
-                  render={(msg) => <Text color="red.500">{msg}</Text>}
-                />
+                <ErrorMessage name="name">
+                  {(msg) => <Text color="red.500">{msg}</Text>}
+                </ErrorMessage>
               </FormControl>
 
               <FormControl mb={4}>
@@ -127,10 +128,9 @@ export default function SignUpForm() {
                   type="password"
                   focusBorderColor="black"
                 />
-                <ErrorMessage
-                  name="password"
-                  render={(msg) => <Text color="red.500">{msg}</Text>}
-                />
+                <ErrorMessage name="password">
+                  {(msg) => <Text color="red.500">{msg}</Text>}
+                </ErrorMessage>
               </FormControl>
 
               <Button
@@ -157,4 +157,6 @@ export default function SignUpForm() {
       </Flex>
     </Box>
   );
-}
+};
+
+export default SignUpForm;

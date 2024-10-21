@@ -1,16 +1,17 @@
+import { useAuth } from "../../context/AuthContext";
 import CreatePostForm from "../feature/CreatePostForm";
 import PostList from "../feature/PostList";
 import Navbar from "./header";
-import { Box, useColorModeValue } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 export default function Home() {
-  const bgColor = useColorModeValue("gray.100", "gray.800");
+  const user = useAuth();
 
   return (
-    <Box bg={bgColor}>
+    <Box>
       <Navbar />
       <Box maxW="xl" mx="auto" px={2}>
-        <CreatePostForm />
+        {user.user && <CreatePostForm />}
         <PostList />
       </Box>
     </Box>

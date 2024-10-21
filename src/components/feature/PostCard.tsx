@@ -12,14 +12,24 @@ import {
   Button,
   InputGroup,
   InputRightElement,
+  MenuButton,
+  MenuItem,
+  Menu,
+  MenuList,
 } from "@chakra-ui/react";
 import { FaEllipsisH, FaRegHeart, FaRegCommentAlt } from "react-icons/fa";
 import { IoSend } from "react-icons/io5";
 import { PiShareFatBold } from "react-icons/pi";
+import { AppDispatch } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { removePost } from "../../redux/postsThunk";
+import { useState } from "react";
+import LoadingOverlay from "./LoadingOverlay";
+import { deleteImage } from "../../apis/upload.api";
 
 interface User {
+  id: number;
   name: string;
-  avatar: string;
 }
 
 interface Comment {
@@ -28,17 +38,20 @@ interface Comment {
 }
 
 interface Post {
-  profile: User & { postedTime: string };
-  postContent: {
-    text: string;
-    imageUrl?: string;
-  };
-  reactions: {
-    likes: number;
-    comments: number;
-    shares: number;
-  };
-  comments: Comment[];
+  id: number;
+  content: string;
+  imgUrl?: string;
+  imgName?: string;
+  imgPublicId?: string;
+  videoUrl?: string;
+  videoName?: string;
+  videoPublicId?: string;
+  likeCount: number;
+  commentCount: number;
+  shareCount: number;
+  createdAt: string;
+  user: User;
+  comments?: Comment[];
 }
 
 interface PostCardProps {
@@ -80,13 +93,13 @@ const CommentSection = ({
   comments,
   secondaryTextColor,
 }: {
-  comments: Comment[];
+  comments?: Comment[];
   secondaryTextColor: string;
 }) => (
   <>
-    {comments.map((comment, index) => (
+    {comments?.map((comment, index) => (
       <HStack spacing={3} key={index} mb={3}>
-        <Avatar name={comment.user.name} size="sm" src={comment.user.avatar} />
+        <Avatar name={comment.user.name} size="sm" />
         <VStack align="start">
           <Text fontWeight="bold">{comment.user.name}</Text>
           <Text fontSize="sm" color={secondaryTextColor}>
@@ -99,11 +112,35 @@ const CommentSection = ({
 );
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const { profile, postContent, reactions, comments } = post;
+  const {
+    id,
+    user,
+    content,
+    imgUrl,
+    imgPublicId,
+    likeCount,
+    commentCount,
+    shareCount,
+    createdAt,
+    comments,
+  } = post;
+
   const bg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("black", "white");
   const secondaryTextColor = useColorModeValue("gray.600", "gray.400");
   const borderColor = useColorModeValue("gray.200", "gray.600");
+  const [isLoading, setLoading] = useState<Boolean>(false);
+  const dispatch: AppDispatch = useDispatch();
+
+  const deleteAPost = async () => {
+    setLoading(true);
+    await deleteImage(imgPublicId || "")
+      .then(() => dispatch(removePost(id)))
+      .catch((err) => console.log(err));
+    setLoading(false);
+  };
+
+  const formattedDate = new Date(createdAt).toLocaleString();
 
   return (
     <Box
@@ -114,37 +151,54 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       bg={bg}
       color={textColor}
       border={`1px solid ${borderColor}`}
+      position="relative"
+      opacity={isLoading ? 0.5 : 1}
+      transition="opacity 0.3s ease"
     >
+      <LoadingOverlay isLoading={isLoading} />
+
       <HStack justifyContent="space-between" spacing={3} mb={3}>
         <HStack>
-          <Avatar name={profile.name} src={profile.avatar} />
+          <Avatar name={user.name} />
           <VStack align="start" spacing={0}>
-            <Text fontWeight="bold">{profile.name}</Text>
+            <Text fontWeight="bold">{user.name}</Text>
             <Text fontSize="sm" color={secondaryTextColor}>
-              {profile.postedTime}
+              {formattedDate}
             </Text>
           </VStack>
         </HStack>
-        <IconButton aria-label="Options" icon={<FaEllipsisH />} variant="ghost" />
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            aria-label="Options"
+            icon={<FaEllipsisH />}
+            variant="ghost"
+          />
+          <MenuList>
+            <MenuItem color="red.700" fontWeight={700} onClick={deleteAPost}>
+              Delete
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </HStack>
 
       <Text mb={4} fontSize="lg" lineHeight="1.5">
-        {postContent.text}
+        {content}
       </Text>
-      {postContent.imageUrl && (
+      {imgUrl && (
         <Flex justifyContent="center" mb={4}>
-          <Image borderRadius="md" src={postContent.imageUrl} alt="Post Image" />
+          <Image borderRadius="md" src={imgUrl} alt="Post Image" />
         </Flex>
       )}
 
       <HStack spacing={4} mb={3}>
-        <ReactionButton icon={<FaRegHeart />} count={reactions.likes} />
-        <ReactionButton icon={<FaRegCommentAlt />} count={reactions.comments} />
-        <ReactionButton icon={<PiShareFatBold />} count={reactions.shares} />
+        <ReactionButton icon={<FaRegHeart />} count={likeCount} />
+        <ReactionButton icon={<FaRegCommentAlt />} count={commentCount} />
+        <ReactionButton icon={<PiShareFatBold />} count={shareCount} />
       </HStack>
 
       <HStack spacing={3} mt={4}>
-        <Avatar name="Current User" src="https://via.placeholder.com/40" /> 
+        <Avatar name="Current User" src="https://via.placeholder.com/40" />
         <InputGroup flex="1">
           <Input
             placeholder="Write your comment"
@@ -160,7 +214,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               size="md"
               bg={useColorModeValue("gray.300", "gray.600")}
               borderRadius="full"
-              _hover={{ bg: useColorModeValue("gray.400", "gray.500") }} 
+              _hover={{ bg: useColorModeValue("gray.400", "gray.500") }}
             >
               <IoSend />
             </Button>
@@ -168,7 +222,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </InputGroup>
       </HStack>
 
-      <CommentSection comments={comments} secondaryTextColor={secondaryTextColor} />
+      <CommentSection
+        comments={comments}
+        secondaryTextColor={secondaryTextColor}
+      />
     </Box>
   );
 };

@@ -1,49 +1,23 @@
 import { Flex } from "@chakra-ui/react";
 import PostCard from "./PostCard";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts } from "../../redux/postsThunk";
+import { RootState, AppDispatch } from "../../redux/store";
 
 export default function PostList() {
-  const mockPost: any = {
-    profile: {
-      name: "John Carter",
-      avatar: "https://bit.ly/dan-abramov",
-      postedTime: "4 hours ago",
-    },
-    postContent: {
-      text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-      imageUrl: "https://via.placeholder.com/400x300",
-    },
-    reactions: {
-      likes: 1200,
-      comments: 200,
-      shares: 17,
-    },
-    comments: [
-      {
-        user: {
-          name: "Annalise Hane",
-          avatar: "https://via.placeholder.com/50",
-        },
-        content:
-          "Sed ut perspiciatis unde omnis iste natus error sit voluptatem.",
-      },
-      {
-        user: {
-          name: "Robert Bell",
-          avatar: "https://via.placeholder.com/50",
-        },
-        content:
-          "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet.",
-      },
-    ],
-  };
+  const dispatch: AppDispatch = useDispatch();
+  const listPosts = useSelector((state: RootState) => state.posts.list);
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
   return (
     <Flex flexDirection="column" rowGap={4}>
-      <PostCard post={mockPost} />
-      <PostCard post={mockPost} />
-      <PostCard post={mockPost} />
-      <PostCard post={mockPost} />
-      <PostCard post={mockPost} />
+      {listPosts.map((post : any) => (
+        <PostCard key={post.id} post={post} />
+      ))}
     </Flex>
   );
 }

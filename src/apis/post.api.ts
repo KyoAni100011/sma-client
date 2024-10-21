@@ -1,48 +1,9 @@
-import instance from "./InternetService";
+import { createEntity, getEntityById, updateEntity, deleteEntity, getAllEntities } from "./InternetService";
 
-const createPost = async (data: any) => {
-  try {
-    const response = await instance.post("/api/v1/post/create", data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+const createPost = (data: any) => createEntity('post', data);
+const getPosts = () => getAllEntities('post');
+const getPostById = (postId: string) => getEntityById('post', postId);
+const updatePost = (postId: string, data: any) => updateEntity('post', postId, data);
+const deleteCurrPost = (postId: number) => deleteEntity('post', postId);
 
-const getPosts = async () => {
-  try {
-    const response = await instance.get(`/api/v1/post`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const getPostById = async (postId: string) => {
-  try {
-    const response = await instance.get(`/api/v1/post/${postId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const updatePost = async (postId: string, data: any) => {
-  try {
-    const response = await instance.put(`/api/v1/post/update/${postId}`, data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const deletePost = async (postId: string) => {
-  try {
-    const response = await instance.delete(`/api/v1/post/delete/${postId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export { createPost, getPosts, getPostById, updatePost, deletePost };
+export { createPost, getPosts, getPostById, updatePost, deleteCurrPost };

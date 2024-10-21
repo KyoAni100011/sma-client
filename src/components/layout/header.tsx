@@ -19,7 +19,7 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function Navbar() {
   const { colorMode } = useColorMode();
-  const user = useAuth();
+  const { user } = useAuth();
 
   return (
     <Box
@@ -32,7 +32,7 @@ export default function Navbar() {
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <Logo />
         <Flex alignItems="center">
-          {user.user ? <MenuSettings /> : <MenuItems />}
+          {user ? <MenuSettings /> : <MenuItems />}
           <ThemeToggle />
         </Flex>
       </Flex>
@@ -56,7 +56,7 @@ const Logo = () => {
 const MenuItems = () => {
   const { colorMode } = useColorMode();
   return (
-    <Box display={"flex"} alignItems="center">
+    <Box display="flex" alignItems="center">
       <Stack direction="row" spacing={4} alignItems="center">
         <Button
           as={Link}
@@ -83,20 +83,21 @@ const MenuItems = () => {
 };
 
 const MenuSettings = () => {
-  const user = useAuth();
+  const { user, logout } = useAuth();
+
   return (
     <Menu>
       <MenuButton as={HStack} border="1px solid" borderRadius="full">
         <Flex alignItems="center" p={1}>
           <Text mx={2} fontWeight={700}>
-            {user.user?.name}
+            {user?.name}
           </Text>
           <Avatar boxSize="30px" />
         </Flex>
       </MenuButton>
 
       <MenuList>
-        <MenuItem color="red.700" fontWeight={700} onClick={user.logout}>
+        <MenuItem color="red.700" fontWeight={700} onClick={logout}>
           Log out
         </MenuItem>
       </MenuList>

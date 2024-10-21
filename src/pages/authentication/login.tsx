@@ -37,10 +37,11 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = async (
     values: LoginFormValues,
-    { setSubmitting }: any
+    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
   ) => {
     try {
       const res = await login(values);
+      localStorageUtils.setItem("user", res.data);
       toast({
         title: res.message,
         description: "Welcome back!",
@@ -49,13 +50,14 @@ const LoginForm: React.FC = () => {
         isClosable: true,
         position: "top",
       });
-      localStorageUtils.setItem("user", res.data)
-      setTimeout(() => {window.location.href="/"}, 2500)
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2500);
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       toast({
         title: "Error",
-        description: error.response?.data?.message,
+        description: error.response?.data?.message || "Something went wrong.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -70,7 +72,7 @@ const LoginForm: React.FC = () => {
     <Box
       maxWidth="500px"
       mx="auto"
-      height={"100vh"}
+      height="100vh"
       bg="white"
       color="black"
       px={4}
@@ -97,10 +99,9 @@ const LoginForm: React.FC = () => {
                   type="email"
                   focusBorderColor="black"
                 />
-                <ErrorMessage
-                  name="email"
-                  render={(msg) => <Text color="red.500">{msg}</Text>}
-                />
+                <ErrorMessage name="email">
+                  {(msg) => <Text color="red.500">{msg}</Text>}
+                </ErrorMessage>
               </FormControl>
 
               <FormControl mb={4}>
@@ -112,10 +113,9 @@ const LoginForm: React.FC = () => {
                   type="password"
                   focusBorderColor="black"
                 />
-                <ErrorMessage
-                  name="password"
-                  render={(msg) => <Text color="red.500">{msg}</Text>}
-                />
+                <ErrorMessage name="password">
+                  {(msg) => <Text color="red.500">{msg}</Text>}
+                </ErrorMessage>
               </FormControl>
 
               <Button

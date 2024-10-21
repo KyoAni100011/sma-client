@@ -1,4 +1,4 @@
-import instance from "./InternetService.ts";
+import { apiClient } from "./InternetService.ts";
 
 interface SignUpReq {
   name: string;
@@ -16,9 +16,14 @@ interface ResponseData {
   data?: Record<string, any>;
 }
 
+const API_ENDPOINTS = {
+  REGISTER: "/api/v1/user/register",
+  LOGIN: "/api/v1/user/login",
+};
+
 const register = async (data: SignUpReq): Promise<ResponseData> => {
   try {
-    const response = await instance.post("/api/v1/user/register", data);
+    const response = await apiClient.post(API_ENDPOINTS.REGISTER, data);
     return response.data;
   } catch (error) {
     throw error;
@@ -27,7 +32,7 @@ const register = async (data: SignUpReq): Promise<ResponseData> => {
 
 const login = async (data: LoginReq): Promise<ResponseData> => {
   try {
-    const response = await instance.post("/api/v1/user/login", data);
+    const response = await apiClient.post(API_ENDPOINTS.LOGIN, data);
     return response.data;
   } catch (error) {
     throw error;
